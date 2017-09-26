@@ -1,0 +1,230 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using z.Data;
+
+namespace z.SQL.Data
+{
+    /// <summary>
+    /// LJ 20160505
+    /// For Web
+    /// </summary>
+    //public class ZTable : XTableWithSchema, IDisposable
+    //{
+    //    private const string STableName = "@STable";
+    //    private string ScrptTable;
+    //    private string Scrpt;
+    //    private string ScrptSelect;
+    //    private string ScrptDeleted;
+    //    public SqlDataAdapter Adapter;
+    //    public SqlCommand SelectCommand;
+
+    //    public List<int?> DeletedID { private get; set; }
+
+    //    //public ZTable() : base() { }
+
+    //    public ZTable(SqlConnection conn, string tableName) : base(conn, tableName)
+    //    {
+    //        this.BuildScript();
+
+    //        Adapter = new SqlDataAdapter();
+    //        SelectCommand = new SqlCommand("", conn);
+    //        Adapter.SelectCommand = new SqlCommand("SELECT * FROM " + this.TableName, conn);
+    //        Adapter.FillSchema(this, SchemaType.Mapped);
+
+    //        Adapter.SelectCommand = SelectCommand;
+    //        AfterNew();
+    //    }
+
+    //    public ZTable(IQueryArgs args, string tablename) : this(new SqlConnection((args as Query.QueryArgs).GetConnectionString()), tablename)
+    //    {
+    //    }
+
+    //    protected void BuildScript()
+    //    {
+    //        var col = this.SchemaTable.Rows.Cast<DataRow>().Where(x => x["ID_ColumnSource"].ToInt32() == 1 && !x["Computed"].ToBool() && x["DataType"].ToString().ToLower() != "uniqueidentifier").OrderBy(x => x["SeqNo"].ToInt32());
+    //        var h = col.Where(x => x["Identity"].ToInt32() == 0).Select(x => new
+    //        {
+    //            a = $"[{x["ColumnName"].ToString()}]",
+    //            b = $"S.[{x["ColumnName"].ToString()}]",
+    //            c = $"[{x["ColumnName"]}] = S.[{x["ColumnName"]}]"
+    //        });
+    //        var s = new StringBuilder();
+    //        s.AppendLine("DECLARE @tbl AS TABLE(ID INT)");
+    //        s.AppendLine($"MERGE dbo.{ this.TableName } AS T");
+    //        s.AppendLine($"USING { STableName } AS S ON T.ID = s.ID");
+    //        s.AppendLine("WHEN NOT MATCHED THEN");
+    //        s.AppendLine($"INSERT ({  h.Select(x => x.a).Join()  }) VALUES ({ h.Select(x => x.b).Join() })");
+    //        s.AppendLine("WHEN MATCHED THEN");
+    //        s.AppendLine($"UPDATE SET { h.Select(x => x.c).Join() }");
+    //        s.AppendLine("OUTPUT Inserted.ID INTO @tbl;");
+    //        s.AppendLine("SELECT ID FROM @tbl");
+    //        Scrpt = s.ToString();
+
+    //        //temptable
+    //        var f = col.Select(x =>
+    //        {
+    //            string sd = $"[{ x["ColumnName"].ToString() }] ";
+    //            string lngth = (x["DataType"].ToString() == "varchar" && x["Length"].ToInt32() == -1) ? "MAX" : x["Length"].ToString();
+    //            sd += (x["DataType"].ToString() == "varchar") ? $"{x["DataType"].ToString()}({ lngth })" : x["DataType"].ToString();
+    //            sd += x["AllowDBNull"].ToBool() ? " NULL " : " NOT NULL ";
+    //            sd += x["DefaultValue"].IsNull("").ToString() != "" ? "DEFAULT " + x["DefaultValue"].ToString() : "";
+    //            return sd;
+    //        });
+    //        ScrptTable = $"DECLARE { STableName } AS TABLE ({ f.Join() })";
+
+    //        //Select
+    //        var c = this.SchemaTable.Rows.Cast<DataRow>().OrderBy(x => x["SeqNo"].ToInt32()).Select(x => $"[{ x["ColumnName"].ToString() }]");
+    //        ScrptSelect = $"Select { c.Join() } From v{ this.TableName.Substring(1) }";
+
+    //        //delete
+    //        ScrptDeleted = $"Delete From {this.TableName}";
+    //    }
+
+    //    private void AfterNew()
+    //    {
+    //        string s = null;
+    //        string def = "";
+    //        foreach (DataColumn dc in this.Columns)
+    //        {
+    //            var dra = mSchemaTable.AsEnumerable().Where(x => x["ColumnName"].ToString() == dc.ColumnName);
+    //            if (dra.Any())
+    //            {
+    //                var rda = dra.Single();
+    //                s = rda["Caption"].ToString();
+    //                if (string.IsNullOrEmpty(s)) dc.Caption = dc.ColumnName;
+    //                else dc.Caption = s;
+    //                s = rda["Expression"].ToString();
+    //                dc.ExtendedProperties.Add("Expression", s);
+    //                def = rda["DefaultValue"].ToString();
+    //            }
+    //            //if (!(dc.AllowDBNull | dc.ReadOnly))
+    //            //{
+    //            switch (dc.DataType.ToString().ToUpper())
+    //            {
+    //                case "SYSTEM.DATETIME":
+    //                    if (def.ToUpper() == "(getdate())".ToUpper()) dc.DefaultValue = DateTime.Now.Date;
+    //                    break;
+    //                case "SYSTEM.INT32":
+    //                case "SYSTEM.DECIMAL":
+    //                    //ROBBIE NOTE: StartsWith is casesensitive 
+    //                    if ((dc.ColumnName == "ID" | dc.ColumnName.StartsWith("ID_")))
+    //                    {
+    //                        if (!string.IsNullOrEmpty(def))
+    //                        {
+    //                            dc.DefaultValue = Convert.ToInt32(def.Trim(new char[] { '(', ')' }));
+    //                        }
+    //                    }
+    //                    else
+    //                    {
+    //                        if (string.IsNullOrEmpty(def))
+    //                        {
+    //                            dc.DefaultValue = 0;
+    //                        }
+    //                        else
+    //                        {
+    //                            dc.DefaultValue = Convert.ToDecimal(def.Trim(new char[] { '(', ')' }));
+    //                        }
+    //                    }
+    //                    break;
+    //                case "SYSTEM.BOOLEAN":
+    //                    if (string.IsNullOrEmpty(def))
+    //                    {
+    //                        dc.DefaultValue = 0;
+    //                    }
+    //                    else
+    //                    {
+    //                        dc.DefaultValue = def.Trim(new char[] { '(', ')' }).ToBool();
+    //                    }
+    //                    break;
+    //            }
+    //            //  }
+    //        }
+    //    }
+
+    //    public void Update()
+    //    {
+    //        try
+    //        {
+    //            if (SchemaTable.ObjectType == SchemaTable.ObjectTypeEnum.Table)
+    //            {
+    //                var str = new List<string>();
+    //                var col = this.SchemaTable.Rows.Cast<DataRow>().Where(x => x["ID_ColumnSource"].ToInt32() == 1).OrderBy(x => x["SeqNo"].ToInt32());
+    //                var colid = col.Where(x => x["Identity"].ToInt32() == 1).Select(x => x["ColumnName"].ToString()).Single();
+    //                foreach (DataRow dr in this.Rows)
+    //                {
+    //                    var df = new List<string>();
+    //                    int id = dr[colid].ToInt32();
+    //                    df.Add((id < 0 ? 0 : id).SQLFormat());
+    //                    foreach (DataRow dc in col.Where(x => x["Identity"].ToInt32() == 0 && !x["Computed"].ToBool() && x["DataType"].ToString().ToLower() != "uniqueidentifier"))
+    //                    {
+    //                        df.Add(dr[dc["ColumnName"].ToString()].SQLFormat());
+    //                    }
+    //                    str.Add($"({ df.Join() })");
+    //                }
+
+    //                string insert = $"INSERT INTO { STableName } values { str.Join() }";
+
+    //                SelectCommand.CommandText = ScrptTable + "\r\n" + insert + "\r\n" + Scrpt;
+    //                using (var dt = new DataTable())
+    //                {
+    //                    //delete first
+    //                    if (DeletedID?.Count > 0)
+    //                    {
+    //                        using (var dcm = new SqlCommand())
+    //                        {
+    //                            dcm.CommandText = ScrptDeleted + $" Where ID in ({ DeletedID.Join() })";
+    //                            dcm.Connection = SelectCommand.Connection;
+    //                            dcm.Transaction = SelectCommand.Transaction;
+    //                            dcm.ExecuteNonQuery();
+    //                        }
+    //                    }
+    //                    if (this.Rows.Count > 0)
+    //                    {
+    //                        Adapter.Fill(dt);
+    //                        this.Rows.Clear();
+    //                        if (dt.Rows.Count > 0)
+    //                        {
+    //                            SelectCommand.CommandText = $"{ ScrptSelect } Where ID in ({ dt.Rows.Cast<DataRow>().Select(x => x["ID"].ToInt32()).Join() })";
+    //                            Adapter.Fill(this);
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            throw ex;
+    //        }
+    //    }
+
+    //    public DataRow AddRow()
+    //    {
+    //        var r = this.NewRow();
+    //        r["ID"] = this.Columns["ID"].AutoIncrementSeed;
+    //        --this.Columns["ID"].AutoIncrementSeed;
+    //        this.Rows.Add(r);
+    //        return r;
+    //    }
+
+    //    public string UpdateCommandText
+    //    {
+    //        get
+    //        {
+    //            return SelectCommand.CommandText;
+    //        }
+    //    }
+
+    //    protected override void Dispose(bool disposing)
+    //    {
+    //        SelectCommand?.Dispose();
+    //        Adapter?.Dispose();
+    //        GC.Collect();
+    //        base.Dispose(disposing);
+    //    }
+    //}
+}

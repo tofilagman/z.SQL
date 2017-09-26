@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>z.SQL</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>tofilagman</authors>
+    <owners>tofilagman</owners>
+	<iconUrl>https://www.gravatar.com/avatar/fc532ccf021d86fcafbb8db5a42d46d9</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SQL Helper and Extension</description>
+    <releaseNotes>First release</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>application app utility helper extension SQL</tags>
+  </metadata>
+</package>
