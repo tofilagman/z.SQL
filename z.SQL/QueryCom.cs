@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualBasic;
 using System.Data;
+using System.Globalization;
 
 namespace z.SQL
 {
@@ -88,7 +89,7 @@ namespace z.SQL
                 switch (t)
                 {
                     case "DATE":
-                        s = o.ToString();
+                        s = Convert.ToDateTime(o).ToString(CultureInfo.InvariantCulture); 
                         s = Strings.Replace(s, "'", escapedelimiter);
                         s = String.Format("'{0}'", s);
                         break;
