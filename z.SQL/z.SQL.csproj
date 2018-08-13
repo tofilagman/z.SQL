@@ -98,9 +98,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="z.Data, Version=1.1.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\z.Data.1.1.0.2\lib\net45\z.Data.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="z.Data.Standard, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\z.Data.Standard.1.2.6\lib\net45\z.Data.Standard.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

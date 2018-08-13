@@ -118,7 +118,7 @@ namespace z.SQL
             using (var g = new QueryMerge(sql as Query)) g.Save(TableName, ViewName, dr, RebuildTable);
         }
 
-        public static DataRow Save(this IQuery sql, string TableName, string ViewName, Args values)
+        public static DataRow Save(this IQuery sql, string TableName, string ViewName, Pair values)
         {
             using (DataTable dt = new DataTable())
             {
@@ -155,9 +155,9 @@ namespace z.SQL
                 return QueryCom.UpdateRow(TableName, dr.Table.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray(), dr.ItemArray, "ID", dr["ID"], Query);
         }
 
-        public static void Save(this IQuery query, string TableName, Args values) => query.Save(TableName, "", values);
+        public static void Save(this IQuery query, string TableName, Pair values) => query.Save(TableName, "", values);
 
-        public static void Save(this IQuery query, string TableName, List<Args> values) => values.Each(x => query.Save(TableName, x));
+        public static void Save(this IQuery query, string TableName, PairCollection values) => values.Each(x => query.Save(TableName, x));
 
         #endregion
 
