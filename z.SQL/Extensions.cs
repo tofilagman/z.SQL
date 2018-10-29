@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualBasic;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,21 +27,21 @@ namespace z.SQL
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) { }
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) { }
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) { }
         }
 
-        [Obsolete]
-        public static DataTable FillTable(this string query, IQueryArgs args)
-        {
-            return query.ExecQuery(args).Tables[0] as DataTable;
-        }
+        //[Obsolete]
+        //public static DataTable FillTable(this string query, IQueryArgs args)
+        //{
+        //    return query.ExecQuery(args).Tables[0] as DataTable;
+        //}
 
-        [Obsolete]
-        public static DataTable Filltable(this IQueryArgs args, string Command)
-        {
-            return Command.FillTable(args);
-        }
+        //[Obsolete]
+        //public static DataTable Filltable(this IQueryArgs args, string Command)
+        //{
+        //    return Command.FillTable(args);
+        //}
 
         public static SqlConnection Connection(this IQueryArgs args)
         {
@@ -147,13 +147,13 @@ namespace z.SQL
                 throw new Exception("This Method is not yet Implemented for this Object");
         }
 
-        public static DataRow Save(this QueryMy Query, DataRow dr, string TableName)
-        {
-            if (dr["ID"].ToInt32() == 0)
-                return QueryCom.InsertRow(TableName, dr.Table.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray(), dr.ItemArray, Query);
-            else
-                return QueryCom.UpdateRow(TableName, dr.Table.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray(), dr.ItemArray, "ID", dr["ID"], Query);
-        }
+        //public static DataRow Save(this QueryMy Query, DataRow dr, string TableName)
+        //{
+        //    if (dr["ID"].ToInt32() == 0)
+        //        return QueryCom.InsertRow(TableName, dr.Table.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray(), dr.ItemArray, Query);
+        //    else
+        //        return QueryCom.UpdateRow(TableName, dr.Table.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray(), dr.ItemArray, "ID", dr["ID"], Query);
+        //}
 
         public static void Save(this IQuery query, string TableName, Pair values) => query.Save(TableName, "", values);
 
@@ -177,8 +177,8 @@ namespace z.SQL
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecQuery(Command, values);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecQuery(Command, values);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecQuery(Command, values);
             else return null;
         }
 
@@ -186,8 +186,8 @@ namespace z.SQL
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecQuery(Command);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecQuery(Command);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecQuery(Command);
             else return null;
         }
 
@@ -237,8 +237,8 @@ namespace z.SQL
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecScalar(Command, values);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar(Command, values);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar(Command, values);
             else return null;
         }
 
@@ -246,8 +246,8 @@ namespace z.SQL
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecScalar(Command, Parameters, values, type);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar(Command, Parameters, values, type);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar(Command, Parameters, values, type);
             else return null;
         }
 
@@ -255,8 +255,8 @@ namespace z.SQL
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecScalar<T>(Command, values);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar<T>(Command, values);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar<T>(Command, values);
             else return null;
         }
 
@@ -264,8 +264,8 @@ namespace z.SQL
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecScalar<T>(Command, Parameters, values, type);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar<T>(Command, Parameters, values, type);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar<T>(Command, Parameters, values, type);
             else return null;
         }
 
@@ -297,41 +297,41 @@ namespace z.SQL
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) sql.ExecNonQuery(Command, values);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command, values);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command, values);
         }
 
         public static void ExecNonQuery(this IQueryArgs args, string Command)
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) sql.ExecNonQuery(Command);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command);
         }
 
         public static void ExecNonQuery(this IQueryArgs args, string Command, string[] Parameters, object[] values, CommandType type = CommandType.StoredProcedure)
         {
             if (args.GetType() == typeof(Query.QueryArgs))
                 using (Query sql = new Query(args as Query.QueryArgs)) sql.ExecNonQuery(Command, Parameters, values, type);
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command, Parameters, values, type);
+            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
+            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command, Parameters, values, type);
         }
 
         #endregion
 
-        public static void Import(this IQueryArgs args, string path, MySql.Data.MySqlClient.MySqlBackup.importComplete onDone, EventHandler<MySqlBackup.ExceptionEventArgs> onError, MySqlBackup.importProgressChange OnProgress)
-        {
-            if (args.GetType() == typeof(Query.QueryArgs)) throw new Exception("Import not supported");
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.Import(path, onDone, onError, OnProgress);
-        }
+        //public static void Import(this IQueryArgs args, string path, MySql.Data.MySqlClient.MySqlBackup.importComplete onDone, EventHandler<MySqlBackup.ExceptionEventArgs> onError, MySqlBackup.importProgressChange OnProgress)
+        //{
+        //    if (args.GetType() == typeof(Query.QueryArgs)) throw new Exception("Import not supported");
+        //    else if (args.GetType() == typeof(QueryMy.QueryArgs))
+        //        using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.Import(path, onDone, onError, OnProgress);
+        //}
 
-        public static void Export(this IQueryArgs args, string path, MySql.Data.MySqlClient.MySqlBackup.exportComplete onDone, EventHandler<MySqlBackup.ExceptionEventArgs> onError, MySqlBackup.exportProgressChange onProgress)
-        {
-            if (args.GetType() == typeof(Query.QueryArgs)) throw new Exception("Export not supported");
-            else if (args.GetType() == typeof(QueryMy.QueryArgs))
-                using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.Export(path, onDone, onError, onProgress);
-        }
+        //public static void Export(this IQueryArgs args, string path, MySql.Data.MySqlClient.MySqlBackup.exportComplete onDone, EventHandler<MySqlBackup.ExceptionEventArgs> onError, MySqlBackup.exportProgressChange onProgress)
+        //{
+        //    if (args.GetType() == typeof(Query.QueryArgs)) throw new Exception("Export not supported");
+        //    else if (args.GetType() == typeof(QueryMy.QueryArgs))
+        //        using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.Export(path, onDone, onError, onProgress);
+        //}
 
         public static string EncryptA(this string vData, int vKey)
         {

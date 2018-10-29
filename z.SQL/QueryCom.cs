@@ -328,27 +328,27 @@ namespace z.SQL
             }
         }
 
-        public static DataRow InsertRow(string tablename, string[] Columns, object[] Values, QueryMy qry, string KeyColumn = "ID")
-        {
-            try
-            {
-                DataRow dr = null;
+        //public static DataRow InsertRow(string tablename, string[] Columns, object[] Values, QueryMy qry, string KeyColumn = "ID")
+        //{
+        //    try
+        //    {
+        //        DataRow dr = null;
 
-                string k = string.Format("Insert into {0} ({1}) values ({2}); Select * from {0} where {3} = LAST_INSERT_ID();",
-                                        tablename,
-                                        string.Join(",", Columns),
-                                        string.Join(",", Values.Select(x => x.SQLFormat()).ToArray()),
-                                        KeyColumn);
+        //        string k = string.Format("Insert into {0} ({1}) values ({2}); Select * from {0} where {3} = LAST_INSERT_ID();",
+        //                                tablename,
+        //                                string.Join(",", Columns),
+        //                                string.Join(",", Values.Select(x => x.SQLFormat()).ToArray()),
+        //                                KeyColumn);
 
-                dr = qry.ExecQuery(k).Tables[0].Rows[0];
+        //        dr = qry.ExecQuery(k).Tables[0].Rows[0];
 
-                return dr;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return dr;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
        
 
@@ -438,34 +438,34 @@ namespace z.SQL
             }
         }
 
-        public static DataRow UpdateRow(string tablename, string[] Columns, object[] Values, string KeyColumn, object value, QueryMy qry)
-        {
-            try
-            {
-                DataRow dr = null;
-                List<string> myQryStr = new List<string>();
+        //public static DataRow UpdateRow(string tablename, string[] Columns, object[] Values, string KeyColumn, object value, QueryMy qry)
+        //{
+        //    try
+        //    {
+        //        DataRow dr = null;
+        //        List<string> myQryStr = new List<string>();
 
-                ////revalidate
-                for (int i = 0; i < Columns.Length; i++)
-                    myQryStr.Add(string.Format("{0} = {1}", Columns[i], SQLFormat(Values[i])));
+        //        ////revalidate
+        //        for (int i = 0; i < Columns.Length; i++)
+        //            myQryStr.Add(string.Format("{0} = {1}", Columns[i], SQLFormat(Values[i])));
 
-                string k = string.Format("update {0} set {1} where {2} = {3}",
-                                        tablename,
-                                        string.Join(",", myQryStr.ToArray()),
-                                        KeyColumn,
-                                        value);
+        //        string k = string.Format("update {0} set {1} where {2} = {3}",
+        //                                tablename,
+        //                                string.Join(",", myQryStr.ToArray()),
+        //                                KeyColumn,
+        //                                value);
 
-                qry.ExecNonQuery(k);
+        //        qry.ExecNonQuery(k);
 
-                dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, value)).Tables[0].Rows[0];
+        //        dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, value)).Tables[0].Rows[0];
 
-                return dr;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return dr;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
          
         public static DataTable AddNull(DataTable dt)
         {
