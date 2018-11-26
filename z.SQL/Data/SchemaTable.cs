@@ -21,7 +21,7 @@ namespace z.SQL.Data
         {
             string s = null;
             string vViewName = null;
-            vViewName = "v" + Strings.Right(vTableName, vTableName.Length - 1);
+            vViewName = "v" + vTableName.Substring(1); //Strings.Right(vTableName, vTableName.Length - 1);
             s = "SELECT * FROM dbo.fViewSchema('" + vTableName + "','" + vViewName + "')";
             this.FillTable(s, vConnection); //  FillTable(this, s, vConnection);
             this.DefaultView.Sort = "SeqNo";
@@ -72,7 +72,7 @@ namespace z.SQL.Data
                         //End If
                         if (Convert.ToBoolean(vScale <= 4))
                         {
-                            s = "#,##0" + (vScale > 0 ? "." + Strings.StrDup(vScale, "0") : "").ToString();
+                            s = "#,##0" + (vScale > 0 ? "." + new string('0', vScale) : "").ToString(); //Strings.StrDup(vScale, "0")
                         }
                         else
                         {
@@ -83,8 +83,8 @@ namespace z.SQL.Data
                     case "datetime":
                         bool d = false;
                         bool tt = false;
-                        d = Strings.InStr(dr["ColumnName"].ToString(), "Date", CompareMethod.Binary) > 0;
-                        tt = Strings.InStr(dr["ColumnName"].ToString(), "Time", CompareMethod.Binary) > 0;
+                        d = dr["ColumnName"].ToString().Contains("Date"); //Strings.InStr(dr["ColumnName"].ToString(), "Date", CompareMethod.Binary) > 0;
+                        tt = dr["ColumnName"].ToString().Contains("Time"); //Strings.InStr(dr["ColumnName"].ToString(), "Time", CompareMethod.Binary) > 0;
                         if (d & tt)
                             s = DefaultDateTimeFormat;
                         else if (d)
@@ -112,7 +112,7 @@ namespace z.SQL.Data
 
         public DataRow SchemaRow(string pColumnName)
         {
-            return this.AsEnumerable().Where(x => x["ColumnName"].ToString() == pColumnName).SingleOrDefault();
+            return this.Rows.Cast<DataRow>().SingleOrDefault(x => x["ColumnName"].ToString() == pColumnName);
         }
 
         public ObjectTypeEnum GetObjectType(SqlConnection vConnection)

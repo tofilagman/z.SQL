@@ -123,7 +123,7 @@ namespace z.SQL.Data
             string def = "";
             foreach (DataColumn dc in this.Columns)
             {
-                var dra = mSchemaTable.AsEnumerable().Where(x => x["ColumnName"].ToString() == dc.ColumnName);
+                var dra = mSchemaTable.Rows.Cast<DataRow>().Where(x => x["ColumnName"].ToString() == dc.ColumnName);
                 if (dra.Any())
                 {
                     var rda = dra.Single();

@@ -79,24 +79,26 @@ namespace z.SQL
         {
             string s;
             string t;
-            if (Information.IsDBNull(o) || Information.IsNothing(o))
-            {
+            //if (Information.IsDBNull(o) || Information.IsNothing(o))
+            //{
+            //    s = "NULL";
+            //}
+            if (o == null || o == DBNull.Value)
                 s = "NULL";
-            }
             else
             {
-                t = Strings.UCase(Information.TypeName(o));
+                t = o.GetType().Name.ToUpper(); //Strings.UCase(Information.TypeName(o));
                 switch (t)
                 {
                     case "DATE":
-                        s = Convert.ToDateTime(o).ToString(CultureInfo.InvariantCulture); 
-                        s = Strings.Replace(s, "'", escapedelimiter);
+                        s = Convert.ToDateTime(o).ToString(CultureInfo.InvariantCulture);
+                        s = s.Replace("'", escapedelimiter); //Strings.Replace(s, "'", escapedelimiter);
                         s = String.Format("'{0}'", s);
                         break;
                     case "STRING":
                     case "GUID":
                         s = o.ToString();
-                        s = Strings.Replace(s, "'", escapedelimiter);
+                        s = s.Replace("'", escapedelimiter); //Strings.Replace(s, "'", escapedelimiter);
                         s = String.Format("'{0}'", s);
                         break;
                     case "BOOLEAN":
@@ -111,73 +113,73 @@ namespace z.SQL
         }
          
 
-        public static DataRow SaveDataRowAndFill(DataRow dr, string tablename, string KeyColumn, QueryOLE qry, bool Parameterize = false)
-        {
+        //public static DataRow SaveDataRowAndFill(DataRow dr, string tablename, string KeyColumn, QueryOLE qry, bool Parameterize = false)
+        //{
 
-            try
-            {
-                DataRow mdr = dr;
-                List<string> col = new List<string>();
-                List<object> val = new List<object>();
-                foreach (DataColumn dc in dr.Table.Columns)
-                {
-                    if (dc.ColumnName == KeyColumn) continue;
-                    val.Add(dr[dc.ColumnName]);
-                    col.Add(dc.ColumnName);
-                }
+        //    try
+        //    {
+        //        DataRow mdr = dr;
+        //        List<string> col = new List<string>();
+        //        List<object> val = new List<object>();
+        //        foreach (DataColumn dc in dr.Table.Columns)
+        //        {
+        //            if (dc.ColumnName == KeyColumn) continue;
+        //            val.Add(dr[dc.ColumnName]);
+        //            col.Add(dc.ColumnName);
+        //        }
 
-                //update
-                int ID = (dr[KeyColumn] == DBNull.Value) ? 0 : Convert.ToInt32(dr[KeyColumn]);
-                if (ID > 0)
-                {
-                    mdr = UpdateRow(tablename, col.ToArray(), val.ToArray(), KeyColumn, ID, qry, true, Parameterize);
-                }
-                else
-                {
-                    mdr = InsertRow(tablename, col.ToArray(), val.ToArray(), qry, KeyColumn, true, Parameterize);
-                }
+        //        //update
+        //        int ID = (dr[KeyColumn] == DBNull.Value) ? 0 : Convert.ToInt32(dr[KeyColumn]);
+        //        if (ID > 0)
+        //        {
+        //            mdr = UpdateRow(tablename, col.ToArray(), val.ToArray(), KeyColumn, ID, qry, true, Parameterize);
+        //        }
+        //        else
+        //        {
+        //            mdr = InsertRow(tablename, col.ToArray(), val.ToArray(), qry, KeyColumn, true, Parameterize);
+        //        }
 
-                return mdr;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+        //        return mdr;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
 
-        }
+        //}
 
-        public static DataRow SaveDataRowAndFill(DataRow dr, string tablename, string KeyColumn, QueryODBC qry)
-        {
-            try
-            {
-                DataRow mdr = dr;
-                List<string> col = new List<string>();
-                List<object> val = new List<object>();
-                foreach (DataColumn dc in dr.Table.Columns)
-                {
-                    if (dc.ColumnName == KeyColumn) continue;
-                    val.Add(dr[dc.ColumnName]);
-                    col.Add(dc.ColumnName);
-                }
+        //public static DataRow SaveDataRowAndFill(DataRow dr, string tablename, string KeyColumn, QueryODBC qry)
+        //{
+        //    try
+        //    {
+        //        DataRow mdr = dr;
+        //        List<string> col = new List<string>();
+        //        List<object> val = new List<object>();
+        //        foreach (DataColumn dc in dr.Table.Columns)
+        //        {
+        //            if (dc.ColumnName == KeyColumn) continue;
+        //            val.Add(dr[dc.ColumnName]);
+        //            col.Add(dc.ColumnName);
+        //        }
 
-                //update
-                int ID = (dr[KeyColumn] == DBNull.Value) ? 0 : Convert.ToInt32(dr[KeyColumn]);
-                if (ID > 0)
-                {
-                    mdr = UpdateRow(tablename, col.ToArray(), val.ToArray(), KeyColumn, ID, qry, true);
-                }
-                else
-                {
-                    mdr = InsertRow(tablename, col.ToArray(), val.ToArray(), qry, KeyColumn, true);
-                }
+        //        //update
+        //        int ID = (dr[KeyColumn] == DBNull.Value) ? 0 : Convert.ToInt32(dr[KeyColumn]);
+        //        if (ID > 0)
+        //        {
+        //            mdr = UpdateRow(tablename, col.ToArray(), val.ToArray(), KeyColumn, ID, qry, true);
+        //        }
+        //        else
+        //        {
+        //            mdr = InsertRow(tablename, col.ToArray(), val.ToArray(), qry, KeyColumn, true);
+        //        }
 
-                return mdr;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return mdr;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         //public static DataRow SaveDataRowAndFill(DataRow dr, string tablename, string KeyColumn, QueryLite qry)
         //{
@@ -213,120 +215,118 @@ namespace z.SQL
         //    }
 
         //}
+         
+        //public static DataRow InsertRow(string tablename, string[] Columns, object[] Values, QueryOLE qry, string KeyColumn = "ID", bool ReturnData = false, bool Parameterize = false)
+        //{
+        //    try
+        //    {
+        //        DataRow dr = null;
+        //        List<object> myQryStr = new List<object>();
+        //        List<string> myColumns = new List<string>();
 
-       
+        //        //revalidate
+        //        foreach (object j in Columns)
+        //        {
+        //            myColumns.Add(string.Format("[{0}]", j));
+        //        }
 
-        public static DataRow InsertRow(string tablename, string[] Columns, object[] Values, QueryOLE qry, string KeyColumn = "ID", bool ReturnData = false, bool Parameterize = false)
-        {
-            try
-            {
-                DataRow dr = null;
-                List<object> myQryStr = new List<object>();
-                List<string> myColumns = new List<string>();
+        //        foreach (object j in Values)
+        //        {
+        //            if (Parameterize)
+        //            {
+        //                myQryStr.Add(j);
+        //            }
+        //            else
+        //            {
+        //                myQryStr.Add(string.Format("'{0}'", j));
+        //            }
+        //        }
 
-                //revalidate
-                foreach (object j in Columns)
-                {
-                    myColumns.Add(string.Format("[{0}]", j));
-                }
+        //        if (Parameterize)
+        //        {
+        //            List<string> myQryColumns = new List<string>();
+        //            foreach (object j in Columns)
+        //            {
+        //                myQryColumns.Add(string.Format("@{0}", j));
+        //            }
 
-                foreach (object j in Values)
-                {
-                    if (Parameterize)
-                    {
-                        myQryStr.Add(j);
-                    }
-                    else
-                    {
-                        myQryStr.Add(string.Format("'{0}'", j));
-                    }
-                }
-
-                if (Parameterize)
-                {
-                    List<string> myQryColumns = new List<string>();
-                    foreach (object j in Columns)
-                    {
-                        myQryColumns.Add(string.Format("@{0}", j));
-                    }
-
-                    string k = string.Format("Insert into {0} ({1}) values ({2})",
-                                        tablename,
-                                        string.Join(",", myColumns.ToArray()),
-                                        string.Join(",", myQryColumns.ToArray()));
-                    qry.ExecNonQuery(k, myQryColumns.ToArray(), myQryStr.ToArray());
-                }
-                else
-                {
-                    string k = string.Format("Insert into {0} ({1}) values ({2})",
-                                        tablename,
-                                        string.Join(",", myColumns.ToArray()),
-                                        string.Join(",", myQryStr.ToArray()));
-                    qry.ExecNonQuery(k);
-                }
+        //            string k = string.Format("Insert into {0} ({1}) values ({2})",
+        //                                tablename,
+        //                                string.Join(",", myColumns.ToArray()),
+        //                                string.Join(",", myQryColumns.ToArray()));
+        //            qry.ExecNonQuery(k, myQryColumns.ToArray(), myQryStr.ToArray());
+        //        }
+        //        else
+        //        {
+        //            string k = string.Format("Insert into {0} ({1}) values ({2})",
+        //                                tablename,
+        //                                string.Join(",", myColumns.ToArray()),
+        //                                string.Join(",", myQryStr.ToArray()));
+        //            qry.ExecNonQuery(k);
+        //        }
 
 
-                if (ReturnData)
-                {
-                    object ID = qry.ExecScalar(string.Format("Select MAX({0}) from {1}", KeyColumn, tablename));
+        //        if (ReturnData)
+        //        {
+        //            object ID = qry.ExecScalar(string.Format("Select MAX({0}) from {1}", KeyColumn, tablename));
 
-                    if (ID != null)
-                    {
-                        dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, ID)).Tables[0].Rows[0];
-                    }
-                }
+        //            if (ID != null)
+        //            {
+        //                dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, ID)).Tables[0].Rows[0];
+        //            }
+        //        }
 
-                return dr;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return dr;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
-        public static DataRow InsertRow(string tablename, string[] Columns, object[] Values, QueryODBC qry, string KeyColumn = "ID", bool ReturnData = false)
-        {
-            try
-            {
-                DataRow dr = null;
-                List<string> myQryStr = new List<string>();
-                List<string> myColumns = new List<string>();
+        //public static DataRow InsertRow(string tablename, string[] Columns, object[] Values, QueryODBC qry, string KeyColumn = "ID", bool ReturnData = false)
+        //{
+        //    try
+        //    {
+        //        DataRow dr = null;
+        //        List<string> myQryStr = new List<string>();
+        //        List<string> myColumns = new List<string>();
 
-                //revalidate
-                foreach (object j in Columns)
-                {
-                    myColumns.Add(string.Format("[{0}]", j));
-                }
+        //        //revalidate
+        //        foreach (object j in Columns)
+        //        {
+        //            myColumns.Add(string.Format("[{0}]", j));
+        //        }
 
-                foreach (object j in Values)
-                {
-                    myQryStr.Add(SQLFormat(j));
-                }
+        //        foreach (object j in Values)
+        //        {
+        //            myQryStr.Add(SQLFormat(j));
+        //        }
 
-                string k = string.Format("Insert into {0} ({1}) values ({2})",
-                                        tablename,
-                                        string.Join(",", myColumns.ToArray()),
-                                        string.Join(",", myQryStr.ToArray()));
+        //        string k = string.Format("Insert into {0} ({1}) values ({2})",
+        //                                tablename,
+        //                                string.Join(",", myColumns.ToArray()),
+        //                                string.Join(",", myQryStr.ToArray()));
 
-                qry.ExecNonQuery(k);
+        //        qry.ExecNonQuery(k);
 
-                if (ReturnData)
-                {
-                    object ID = qry.ExecScalar(string.Format("Select MAX({0}) ID from {1}", KeyColumn, tablename));
+        //        if (ReturnData)
+        //        {
+        //            object ID = qry.ExecScalar(string.Format("Select MAX({0}) ID from {1}", KeyColumn, tablename));
 
-                    if (ID != null)
-                    {
-                        dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, ID)).Tables[0].Rows[0];
-                    }
-                }
+        //            if (ID != null)
+        //            {
+        //                dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, ID)).Tables[0].Rows[0];
+        //            }
+        //        }
 
-                return dr;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return dr;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         //public static DataRow InsertRow(string tablename, string[] Columns, object[] Values, QueryMy qry, string KeyColumn = "ID")
         //{
@@ -352,91 +352,91 @@ namespace z.SQL
 
        
 
-        public static DataRow UpdateRow(string tablename, string[] Columns, object[] Values, string KeyColumn, object value, QueryOLE qry, bool ReturnData = false, bool parameterize = false)
-        {
-            try
-            {
-                DataRow dr = null;
-                List<string> myQryStr = new List<string>();
+        //public static DataRow UpdateRow(string tablename, string[] Columns, object[] Values, string KeyColumn, object value, QueryOLE qry, bool ReturnData = false, bool parameterize = false)
+        //{
+        //    try
+        //    {
+        //        DataRow dr = null;
+        //        List<string> myQryStr = new List<string>();
 
-                //revalidate
-                for (int i = 0; i < Columns.Length; i++)
-                {
-                    if (parameterize)
-                    {
-                        myQryStr.Add(string.Format("[{0}] = @{1}", Columns[i], Columns[i]));
-                    }
-                    else
-                    {
-                        myQryStr.Add(string.Format("[{0}] = {1}", Columns[i], SQLFormat(Values[i])));
-                    }
-                }
+        //        //revalidate
+        //        for (int i = 0; i < Columns.Length; i++)
+        //        {
+        //            if (parameterize)
+        //            {
+        //                myQryStr.Add(string.Format("[{0}] = @{1}", Columns[i], Columns[i]));
+        //            }
+        //            else
+        //            {
+        //                myQryStr.Add(string.Format("[{0}] = {1}", Columns[i], SQLFormat(Values[i])));
+        //            }
+        //        }
 
-                string k = string.Format("update {0} set {1} where {2} = {3}",
-                                        tablename,
-                                        string.Join(",", myQryStr.ToArray()),
-                                        KeyColumn,
-                                        value);
+        //        string k = string.Format("update {0} set {1} where {2} = {3}",
+        //                                tablename,
+        //                                string.Join(",", myQryStr.ToArray()),
+        //                                KeyColumn,
+        //                                value);
 
-                if (parameterize)
-                {
-                    for (int i = 0; i < Columns.Length; i++)
-                    {
-                        Columns[i] = string.Format("@{0}", Columns[i]);
-                    }
-                    qry.ExecNonQuery(k, Columns, Values);
-                }
-                else
-                {
-                    qry.ExecNonQuery(k);
-                }
+        //        if (parameterize)
+        //        {
+        //            for (int i = 0; i < Columns.Length; i++)
+        //            {
+        //                Columns[i] = string.Format("@{0}", Columns[i]);
+        //            }
+        //            qry.ExecNonQuery(k, Columns, Values);
+        //        }
+        //        else
+        //        {
+        //            qry.ExecNonQuery(k);
+        //        }
 
-                if (ReturnData)
-                {
-                    dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, value)).Tables[0].Rows[0];
-                }
+        //        if (ReturnData)
+        //        {
+        //            dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, value)).Tables[0].Rows[0];
+        //        }
 
-                return dr;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return dr;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
-        public static DataRow UpdateRow(string tablename, string[] Columns, object[] Values, string KeyColumn, object value, QueryODBC qry, bool ReturnData = false)
-        {
-            try
-            {
-                DataRow dr = null;
-                List<string> myQryStr = new List<string>();
+        //public static DataRow UpdateRow(string tablename, string[] Columns, object[] Values, string KeyColumn, object value, QueryODBC qry, bool ReturnData = false)
+        //{
+        //    try
+        //    {
+        //        DataRow dr = null;
+        //        List<string> myQryStr = new List<string>();
 
-                //revalidate
-                for (int i = 0; i < Columns.Length; i++)
-                {
-                    myQryStr.Add(string.Format("{0} = '{1}'", Columns[i], Values[i]));
-                }
+        //        //revalidate
+        //        for (int i = 0; i < Columns.Length; i++)
+        //        {
+        //            myQryStr.Add(string.Format("{0} = '{1}'", Columns[i], Values[i]));
+        //        }
 
-                string k = string.Format("update {0} set {1} where {2} = {3}",
-                                        tablename,
-                                        string.Join(",", myQryStr.ToArray()),
-                                        KeyColumn,
-                                        value);
+        //        string k = string.Format("update {0} set {1} where {2} = {3}",
+        //                                tablename,
+        //                                string.Join(",", myQryStr.ToArray()),
+        //                                KeyColumn,
+        //                                value);
 
-                qry.ExecNonQuery(k);
+        //        qry.ExecNonQuery(k);
 
-                if (ReturnData)
-                {
-                    dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, value)).Tables[0].Rows[0];
-                }
+        //        if (ReturnData)
+        //        {
+        //            dr = qry.ExecQuery(string.Format("Select * from {0} Where {1} = {2}", tablename, KeyColumn, value)).Tables[0].Rows[0];
+        //        }
 
-                return dr;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return dr;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         //public static DataRow UpdateRow(string tablename, string[] Columns, object[] Values, string KeyColumn, object value, QueryMy qry)
         //{

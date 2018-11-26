@@ -341,8 +341,8 @@ namespace z.SQL
             foreach (char a_loopVariable in vData)
             {
                 a = a_loopVariable;
-                j = Strings.Asc(a);
-                a = Strings.Chr((j ^ vKey));
+                j = (int)a; //Strings.Asc(a);
+                a = (char)(j ^ vKey);  //Strings.Chr((j ^ vKey));
                 s += a;
             }
             return s;
