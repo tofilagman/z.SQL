@@ -12,6 +12,7 @@ namespace SQLTest
         public void Test1()
         {
             var gg = QueryCom.SQLFormat("asdasdsd");
+            var okj = QueryCom.SQLFormat(DateTime.Now);
             var ng = Extensions.EncryptA("asd", 41);
         }
 

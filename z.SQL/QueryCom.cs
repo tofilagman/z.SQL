@@ -79,26 +79,24 @@ namespace z.SQL
         {
             string s;
             string t;
-            //if (Information.IsDBNull(o) || Information.IsNothing(o))
-            //{
-            //    s = "NULL";
-            //}
+
             if (o == null || o == DBNull.Value)
                 s = "NULL";
             else
             {
-                t = o.GetType().Name.ToUpper(); //Strings.UCase(Information.TypeName(o));
+                t = o.GetType().Name.ToUpper();
                 switch (t)
                 {
                     case "DATE":
+                    case "DATETIME":
                         s = Convert.ToDateTime(o).ToString(CultureInfo.InvariantCulture);
-                        s = s.Replace("'", escapedelimiter); //Strings.Replace(s, "'", escapedelimiter);
+                        s = s.Replace("'", escapedelimiter);
                         s = String.Format("'{0}'", s);
                         break;
                     case "STRING":
                     case "GUID":
                         s = o.ToString();
-                        s = s.Replace("'", escapedelimiter); //Strings.Replace(s, "'", escapedelimiter);
+                        s = s.Replace("'", escapedelimiter);
                         s = String.Format("'{0}'", s);
                         break;
                     case "BOOLEAN":
@@ -111,7 +109,7 @@ namespace z.SQL
             }
             return s;
         }
-         
+
 
         //public static DataRow SaveDataRowAndFill(DataRow dr, string tablename, string KeyColumn, QueryOLE qry, bool Parameterize = false)
         //{
@@ -215,7 +213,7 @@ namespace z.SQL
         //    }
 
         //}
-         
+
         //public static DataRow InsertRow(string tablename, string[] Columns, object[] Values, QueryOLE qry, string KeyColumn = "ID", bool ReturnData = false, bool Parameterize = false)
         //{
         //    try
@@ -350,7 +348,7 @@ namespace z.SQL
         //    }
         //}
 
-       
+
 
         //public static DataRow UpdateRow(string tablename, string[] Columns, object[] Values, string KeyColumn, object value, QueryOLE qry, bool ReturnData = false, bool parameterize = false)
         //{
@@ -466,7 +464,7 @@ namespace z.SQL
         //        throw ex;
         //    }
         //}
-         
+
         public static DataTable AddNull(DataTable dt)
         {
             DataTable idt = dt.Clone();
