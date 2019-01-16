@@ -23,6 +23,7 @@ namespace z.SQL
         public QueryFire(IQueryArgs args)
         {
             Conn = new SqlConnection(args.GetConnectionString());
+            this.CancellationToken = new CancellationTokenSource().Token;
         }
 
         public QueryFire(IQueryArgs args, CancellationToken cancellationToken) : this(args)
@@ -30,33 +31,29 @@ namespace z.SQL
             this.CancellationToken = cancellationToken;
         }
 
-        public async void Execute(string CommandText, string[] Parameter, object[] Value)
+        public void Execute(string CommandText, string[] Parameter, object[] Value)
         {
-            await Task.Run(() =>
+            try
             {
-                try
+                Conn.InfoMessage += (s, e) => Message?.Invoke(e.Errors[0].Message, e.Errors[0].Number);
+                Conn.FireInfoMessageEventOnUserErrors = true;
+                Conn.Open();
+                using (var cmd = new SqlCommand())
                 {
-                    Conn.InfoMessage += (s, e) => Message?.Invoke(e.Errors[0].Message, e.Errors[0].Number);
-                    Conn.FireInfoMessageEventOnUserErrors = true;
-                    Conn.Open();
-                    using (var cmd = new SqlCommand())
-                    {
-                        cmd.Parameterize(Parameter, Value);
-                        cmd.CommandText = CommandText;
-                        cmd.CommandTimeout = 0;
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        cmd.Connection = Conn;
-                        CancellationToken.Register(() => cmd.Cancel());
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.Parameterize(Parameter, Value);
+                    cmd.CommandText = CommandText;
+                    cmd.CommandTimeout = 0;
+                    cmd.CommandType = System.Data.CommandType.Text;
+                    cmd.Connection = Conn;
+                    cmd.ExecuteNonQueryAsync().Wait(CancellationToken);
                 }
-                catch (Exception ex)
-                {
-                    Conn?.Close();
-                    GC.Collect();
-                    throw ex;
-                }
-            }, CancellationToken);
+            }
+            catch (Exception ex)
+            {
+                Conn?.Close();
+                GC.Collect();
+                throw ex;
+            }
         }
 
         public void Execute(string CommandText, params object[] Value)

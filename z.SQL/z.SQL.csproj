@@ -10,9 +10,9 @@
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     
-    <Version>1.1.16</Version>
+    <Version>1.1.17</Version>
     
-    <PackageReleaseNotes>NetCore Compatibility</PackageReleaseNotes> 
+    <PackageReleaseNotes>QueryFire Cancellation</PackageReleaseNotes> 
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">

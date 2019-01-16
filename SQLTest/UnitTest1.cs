@@ -1,5 +1,7 @@
 using System;
 using System.Data.SqlClient;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 using z.SQL;
 using z.SQL.Data;
@@ -27,8 +29,27 @@ namespace SQLTest
             {
                 dfg.Load(100);
             }
+        }
 
 
+        [Fact] //for testing
+        public void QueryFired()
+        {
+            var args = new Query.QueryArgs("Server=tcp:jollibeesvr.database.windows.net,1433;Initial Catalog=InSysJFCDirect_Test;Persist Security Info=False;User ID=jollibeeadmin;Password=P@ssw0rd12345;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+
+            var cts = new CancellationTokenSource();
+            using (var sql = new QueryFire(args, cts.Token))
+            {
+                sql.Message += (s, e) => { };
+
+                Task.Run(() =>
+                {
+                    Task.Delay(3000);
+                    cts.Cancel();
+                });
+
+                sql.Execute("pComputeHours @ID, 1", 220);
+            }
         }
     }
 }
