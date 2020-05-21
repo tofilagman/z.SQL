@@ -5,12 +5,13 @@ using System.Text;
 using Microsoft.VisualBasic;
 using System.Data;
 using System.Globalization;
+using System.Data.SqlClient;
 
 namespace z.SQL
 {
     public static class QueryCom
     {
-        public static bool Connect(Query.QueryArgs ConArgs)
+        public static bool Connect(SqlConnectionStringBuilder ConArgs)
         {
             try
             {
@@ -27,7 +28,7 @@ namespace z.SQL
             }
         }
 
-        public static void ExecNonQuery(string scrpt, Query.QueryArgs ConArgs)
+        public static void ExecNonQuery(string scrpt, SqlConnectionStringBuilder ConArgs)
         {
             using (Query sql = new Query(ConArgs))
             {
@@ -35,7 +36,7 @@ namespace z.SQL
             }
         }
 
-        public static void ExecNonQuery(string scrpt, string[] Param, object[] Value, Query.QueryArgs ConArgs)
+        public static void ExecNonQuery(string scrpt, string[] Param, object[] Value, SqlConnectionStringBuilder ConArgs)
         {
             using (Query sql = new Query(ConArgs))
             {
@@ -43,7 +44,7 @@ namespace z.SQL
             }
         }
 
-        public static object ExecScalar(string scrpt, Query.QueryArgs ConArgs)
+        public static object ExecScalar(string scrpt, SqlConnectionStringBuilder ConArgs)
         {
             using (Query sql = new Query(ConArgs))
             {
@@ -51,7 +52,7 @@ namespace z.SQL
             }
         }
 
-        public static object ExecScalar(string scrpt, string[] Param, object[] Value, Query.QueryArgs ConArgs)
+        public static object ExecScalar(string scrpt, string[] Param, object[] Value, SqlConnectionStringBuilder ConArgs)
         {
             using (Query sql = new Query(ConArgs))
             {
@@ -59,7 +60,7 @@ namespace z.SQL
             }
         }
 
-        public static System.Data.DataSet ExecQuery(string scrpt, Query.QueryArgs ConArgs)
+        public static System.Data.DataSet ExecQuery(string scrpt, SqlConnectionStringBuilder ConArgs)
         {
             using (Query sql = new Query(ConArgs))
             {
@@ -67,7 +68,7 @@ namespace z.SQL
             }
         }
 
-        public static System.Data.DataSet ExecQuery(string scrpt, string[] Param, object[] Value, Query.QueryArgs ConArgs)
+        public static System.Data.DataSet ExecQuery(string scrpt, string[] Param, object[] Value, SqlConnectionStringBuilder ConArgs)
         {
             using (Query sql = new Query(ConArgs))
             {
@@ -487,7 +488,7 @@ namespace z.SQL
             return idt;
         }
 
-        public static List<QueryParameters> GetProcedureParameters(string ProcName, Query.QueryArgs Connection)
+        public static List<QueryParameters> GetProcedureParameters(string ProcName, SqlConnectionStringBuilder Connection)
         {
             List<QueryParameters> param = new List<QueryParameters>();
             using (Query qry = new Query(Connection))

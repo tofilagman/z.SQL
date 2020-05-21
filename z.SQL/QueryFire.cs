@@ -20,13 +20,13 @@ namespace z.SQL
 
         private CancellationToken CancellationToken;
 
-        public QueryFire(IQueryArgs args)
+        public QueryFire(SqlConnectionStringBuilder args)
         {
-            Conn = new SqlConnection(args.GetConnectionString());
+            Conn = new SqlConnection(args.ConnectionString);
             this.CancellationToken = new CancellationTokenSource().Token;
         }
 
-        public QueryFire(IQueryArgs args, CancellationToken cancellationToken) : this(args)
+        public QueryFire(SqlConnectionStringBuilder args, CancellationToken cancellationToken) : this(args)
         {
             this.CancellationToken = cancellationToken;
         }

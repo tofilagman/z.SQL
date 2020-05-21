@@ -12,7 +12,7 @@ namespace z.SQL
 {
     public static class Extensions
     {
-         
+
         public static string SQLFormat(this object inp, string escapeDelimiter = "''")
         {
             return QueryCom.SQLFormat(inp, escapeDelimiter);
@@ -23,29 +23,14 @@ namespace z.SQL
             return string.Format(Command, args.Select(x => x.SQLFormat()).ToArray());
         }
 
-        public static void TestConnect(this IQueryArgs args)
+        public static void TestConnect(this SqlConnectionStringBuilder args)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) { }
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) { }
+            using (Query sql = new Query(args)) { }
         }
 
-        //[Obsolete]
-        //public static DataTable FillTable(this string query, IQueryArgs args)
-        //{
-        //    return query.ExecQuery(args).Tables[0] as DataTable;
-        //}
-
-        //[Obsolete]
-        //public static DataTable Filltable(this IQueryArgs args, string Command)
-        //{
-        //    return Command.FillTable(args);
-        //}
-
-        public static SqlConnection Connection(this IQueryArgs args)
+        public static SqlConnection Connection(this SqlConnectionStringBuilder args)
         {
-            return new SqlConnection(args.GetConnectionString());
+            return new SqlConnection(args.ConnectionString);
         }
 
         /// <summary>
@@ -147,14 +132,6 @@ namespace z.SQL
                 throw new Exception("This Method is not yet Implemented for this Object");
         }
 
-        //public static DataRow Save(this QueryMy Query, DataRow dr, string TableName)
-        //{
-        //    if (dr["ID"].ToInt32() == 0)
-        //        return QueryCom.InsertRow(TableName, dr.Table.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray(), dr.ItemArray, Query);
-        //    else
-        //        return QueryCom.UpdateRow(TableName, dr.Table.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray(), dr.ItemArray, "ID", dr["ID"], Query);
-        //}
-
         public static void Save(this IQuery query, string TableName, Pair values) => query.Save(TableName, "", values);
 
         public static void Save(this IQuery query, string TableName, PairCollection values) => values.Each(x => query.Save(TableName, x));
@@ -163,118 +140,102 @@ namespace z.SQL
 
         #region ExecQuery 
 
-        public static DataSet ExecQuery(this string query, IQueryArgs args)
+        public static DataSet ExecQuery(this string query, SqlConnectionStringBuilder args)
         {
             return args.ExecQuery(query);
         }
 
-        public static DataSet ExecQuery(this string query, string[] parameters, object[] values, Query.QueryArgs args)
+        public static DataSet ExecQuery(this string query, string[] parameters, object[] values, SqlConnectionStringBuilder args)
         {
             using (Query qry = new Query(args)) return qry.ExecQuery(query, parameters, values);
         }
 
-        public static DataSet ExecQuery(this IQueryArgs args, string Command, params object[] values)
+        public static DataSet ExecQuery(this SqlConnectionStringBuilder args, string Command, params object[] values)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecQuery(Command, values);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecQuery(Command, values);
-            else return null;
+            using (Query sql = new Query(args)) return sql.ExecQuery(Command, values);
         }
 
-        public static DataSet ExecQuery(this IQueryArgs args, string Command)
+        public static DataSet ExecQuery(this SqlConnectionStringBuilder args, string Command)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecQuery(Command);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecQuery(Command);
-            else return null;
+            using (Query sql = new Query(args)) return sql.ExecQuery(Command);
+
         }
 
         #endregion
 
         #region TableQuery 
 
-        public static DataTable TableQuery(this string query, IQueryArgs args)
+        public static DataTable TableQuery(this string query, SqlConnectionStringBuilder args)
         {
             return args.TableQuery(query);
         }
 
-        public static DataTable TableQuery(this string query, string[] parameters, object[] values, Query.QueryArgs args)
+        public static DataTable TableQuery(this string query, string[] parameters, object[] values, SqlConnectionStringBuilder args)
         {
             using (Query qry = new Query(args)) return qry.TableQuery(query, parameters, values);
         }
 
-        public static DataTable TableQuery(this IQueryArgs args, string Command, params object[] values)
+        public static DataTable TableQuery(this SqlConnectionStringBuilder args, string Command, params object[] values)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) return sql.TableQuery(Command, values);
-            else return null;
+
+            using (Query sql = new Query(args)) return sql.TableQuery(Command, values);
+
         }
 
-        public static DataTable TableQuery(this IQueryArgs args, string Command)
+        public static DataTable TableQuery(this SqlConnectionStringBuilder args, string Command)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) return sql.TableQuery(Command);
-            else return null;
+            using (Query sql = new Query(args)) return sql.TableQuery(Command);
+
         }
 
         #endregion
 
         #region ExecScalar
 
-        public static object ExecScalar(this string query, IQueryArgs args)
+        public static object ExecScalar(this string query, SqlConnectionStringBuilder args)
         {
             return args.ExecScalar(query);
         }
 
-        public static object ExecScalar(this string query, string[] parameters, object[] values, IQueryArgs args, CommandType type = CommandType.StoredProcedure)
+        public static object ExecScalar(this string query, string[] parameters, object[] values, SqlConnectionStringBuilder args, CommandType type = CommandType.StoredProcedure)
         {
             return args.ExecScalar(query, parameters, values, type);
         }
 
-        public static object ExecScalar(this IQueryArgs args, string Command, params object[] values)
+        public static object ExecScalar(this SqlConnectionStringBuilder args, string Command, params object[] values)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecScalar(Command, values);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar(Command, values);
-            else return null;
+
+            using (Query sql = new Query(args)) return sql.ExecScalar(Command, values);
+
         }
 
-        public static object ExecScalar(this IQueryArgs args, string Command, string[] Parameters, object[] values, CommandType type = CommandType.StoredProcedure)
+        public static object ExecScalar(this SqlConnectionStringBuilder args, string Command, string[] Parameters, object[] values, CommandType type = CommandType.StoredProcedure)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecScalar(Command, Parameters, values, type);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar(Command, Parameters, values, type);
-            else return null;
+
+            using (Query sql = new Query(args)) return sql.ExecScalar(Command, Parameters, values, type);
+
         }
 
-        public static T ExecScalar<T>(this IQueryArgs args, string Command, params object[] values) where T : class
+        public static T ExecScalar<T>(this SqlConnectionStringBuilder args, string Command, params object[] values) where T : class
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecScalar<T>(Command, values);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar<T>(Command, values);
-            else return null;
+
+            using (Query sql = new Query(args)) return sql.ExecScalar<T>(Command, values);
+
         }
 
-        public static T ExecScalar<T>(this IQueryArgs args, string Command, string[] Parameters, object[] values, CommandType type = CommandType.StoredProcedure) where T : class
+        public static T ExecScalar<T>(this SqlConnectionStringBuilder args, string Command, string[] Parameters, object[] values, CommandType type = CommandType.StoredProcedure) where T : class
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) return sql.ExecScalar<T>(Command, Parameters, values, type);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) return sql.ExecScalar<T>(Command, Parameters, values, type);
-            else return null;
+
+            using (Query sql = new Query(args)) return sql.ExecScalar<T>(Command, Parameters, values, type);
+
         }
 
-        public static T ExecScalar<T>(this string query, IQueryArgs args) where T : class
+        public static T ExecScalar<T>(this string query, SqlConnectionStringBuilder args) where T : class
         {
             return args.ExecScalar<T>(query);
         }
 
-        public static T ExecScalar<T>(this string query, string[] parameters, object[] values, IQueryArgs args, CommandType type = CommandType.StoredProcedure) where T : class
+        public static T ExecScalar<T>(this string query, string[] parameters, object[] values, SqlConnectionStringBuilder args, CommandType type = CommandType.StoredProcedure) where T : class
         {
             return args.ExecScalar<T>(query, parameters, values, type);
         }
@@ -283,55 +244,38 @@ namespace z.SQL
 
         #region ExecNonQuery
 
-        public static void ExecNonQuery(this string query, IQueryArgs args)
+        public static void ExecNonQuery(this string query, SqlConnectionStringBuilder args)
         {
             args.ExecNonQuery(query);
         }
 
-        public static void ExecNonQuery(this string query, string[] parameters, object[] values, IQueryArgs args, CommandType type = CommandType.StoredProcedure)
+        public static void ExecNonQuery(this string query, string[] parameters, object[] values, SqlConnectionStringBuilder args, CommandType type = CommandType.StoredProcedure)
         {
             args.ExecNonQuery(query, parameters, values, type);
         }
 
-        public static void ExecNonQuery(this IQueryArgs args, string Command, params object[] values)
+        public static void ExecNonQuery(this SqlConnectionStringBuilder args, string Command, params object[] values)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) sql.ExecNonQuery(Command, values);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command, values);
+
+            using (Query sql = new Query(args)) sql.ExecNonQuery(Command, values);
+
         }
 
-        public static void ExecNonQuery(this IQueryArgs args, string Command)
+        public static void ExecNonQuery(this SqlConnectionStringBuilder args, string Command)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) sql.ExecNonQuery(Command);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command);
+
+            using (Query sql = new Query(args)) sql.ExecNonQuery(Command);
+
         }
 
-        public static void ExecNonQuery(this IQueryArgs args, string Command, string[] Parameters, object[] values, CommandType type = CommandType.StoredProcedure)
+        public static void ExecNonQuery(this SqlConnectionStringBuilder args, string Command, string[] Parameters, object[] values, CommandType type = CommandType.StoredProcedure)
         {
-            if (args.GetType() == typeof(Query.QueryArgs))
-                using (Query sql = new Query(args as Query.QueryArgs)) sql.ExecNonQuery(Command, Parameters, values, type);
-            //else if (args.GetType() == typeof(QueryMy.QueryArgs))
-            //    using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.ExecNonQuery(Command, Parameters, values, type);
+
+            using (Query sql = new Query(args)) sql.ExecNonQuery(Command, Parameters, values, type);
+
         }
 
         #endregion
-
-        //public static void Import(this IQueryArgs args, string path, MySql.Data.MySqlClient.MySqlBackup.importComplete onDone, EventHandler<MySqlBackup.ExceptionEventArgs> onError, MySqlBackup.importProgressChange OnProgress)
-        //{
-        //    if (args.GetType() == typeof(Query.QueryArgs)) throw new Exception("Import not supported");
-        //    else if (args.GetType() == typeof(QueryMy.QueryArgs))
-        //        using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.Import(path, onDone, onError, OnProgress);
-        //}
-
-        //public static void Export(this IQueryArgs args, string path, MySql.Data.MySqlClient.MySqlBackup.exportComplete onDone, EventHandler<MySqlBackup.ExceptionEventArgs> onError, MySqlBackup.exportProgressChange onProgress)
-        //{
-        //    if (args.GetType() == typeof(Query.QueryArgs)) throw new Exception("Export not supported");
-        //    else if (args.GetType() == typeof(QueryMy.QueryArgs))
-        //        using (QueryMy sql = new QueryMy(args as QueryMy.QueryArgs)) sql.Export(path, onDone, onError, onProgress);
-        //}
 
         public static string EncryptA(this string vData, int vKey)
         {
@@ -428,7 +372,7 @@ namespace z.SQL
                 throw ex;
             }
         }
-         
+
         public static void Interpolate(ref string SQLScript, string Key, string Value)
         {
             Value = Regex.Replace(Value, "[$]", "$$$$", RegexOptions.IgnoreCase);

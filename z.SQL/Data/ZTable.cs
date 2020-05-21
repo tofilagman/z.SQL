@@ -42,7 +42,7 @@ namespace z.SQL.Data
             BuildScript();
         }
 
-        public ZTable(IQueryArgs args, string tablename, bool UseViewForSelect = true) : this(new SqlConnection((args as Query.QueryArgs).GetConnectionString()), tablename, UseViewForSelect)
+        public ZTable(SqlConnectionStringBuilder args, string tablename, bool UseViewForSelect = true) : this(new SqlConnection(args.ConnectionString), tablename, UseViewForSelect)
         {
         }
 

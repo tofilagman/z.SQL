@@ -40,7 +40,7 @@ namespace z.SQL.Data
     //        AfterNew();
     //    }
 
-    //    public ZTable(IQueryArgs args, string tablename) : this(new SqlConnection((args as Query.QueryArgs).GetConnectionString()), tablename)
+    //    public ZTable(SqlConnectionStringBuilder args, string tablename) : this(new SqlConnection((args as SqlConnectionStringBuilder).GetConnectionString()), tablename)
     //    {
     //    }
 

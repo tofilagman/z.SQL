@@ -117,7 +117,7 @@ namespace z.SQL.Data
 
         public ObjectTypeEnum GetObjectType(SqlConnection vConnection)
         {
-            var type = new Query.QueryArgs(vConnection.ConnectionString).ExecScalar("SELECT [type] FROM sys.objects WHERE name = @ZTable", this.TableName).ToString().Trim();
+            var type = new SqlConnectionStringBuilder(vConnection.ConnectionString).ExecScalar("SELECT [type] FROM sys.objects WHERE name = @ZTable", this.TableName).ToString().Trim();
             switch (type)
             {
                 case "U": this.ObjectType = ObjectTypeEnum.Table; break;

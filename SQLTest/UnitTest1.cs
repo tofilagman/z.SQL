@@ -23,7 +23,7 @@ namespace SQLTest
         public void TestTable()
         {
 
-            var args = new Query.QueryArgs("Server=192.168.100.12;Initial Catalog=InSysProMaxLive20181126;User ID=sa;Password=dev123sql$%^;");
+            var args = new SqlConnectionStringBuilder("Server=192.168.100.12;Initial Catalog=InSysProMaxLive20181126;User ID=sa;Password=dev123sql$%^;");
 
             using (var dfg = new ZTable(args, "tSellerHRIS", false))
             {
@@ -35,7 +35,7 @@ namespace SQLTest
         [Fact] //for testing
         public void QueryFired()
         {
-            var args = new Query.QueryArgs("Server=tcp:jollibeesvr.database.windows.net,1433;Initial Catalog=InSysJFCDirect_Test;Persist Security Info=False;User ID=jollibeeadmin;Password=P@ssw0rd12345;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            var args = new SqlConnectionStringBuilder("Server=tcp:jollibeesvr.database.windows.net,1433;Initial Catalog=InSysJFCDirect_Test;Persist Security Info=False;User ID=jollibeeadmin;Password=P@ssw0rd12345;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
             var cts = new CancellationTokenSource();
             using (var sql = new QueryFire(args, cts.Token))

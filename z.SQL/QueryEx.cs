@@ -10,16 +10,16 @@ namespace z.SQL
    public class QueryEx : IDisposable
     {
 
-       private Query.QueryArgs qrrgs;
+       private SqlConnectionStringBuilder qrrgs;
        private SqlConnection conn;
        private SqlTransaction tran;
        private SqlCommand command;
        
-       public QueryEx(Query.QueryArgs QryArgs)
+       public QueryEx(SqlConnectionStringBuilder QryArgs)
        {
            try{
                 qrrgs = QryArgs;
-                conn = new SqlConnection(qrrgs.GetConnectionString());
+                conn = new SqlConnection(qrrgs.ConnectionString);
                 this.command = new SqlCommand();
                 this.command.Connection = conn;
                 this.command.Transaction = tran;

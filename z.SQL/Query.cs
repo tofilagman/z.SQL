@@ -11,24 +11,22 @@ namespace z.SQL
     public class Query : IDisposable, IQuery
     {
 
- 
-        public QueryArgs mArgs { get; set; }
 
-        public Query(IQueryArgs QArgs)
+        public readonly SqlConnectionStringBuilder mArgs;
+
+        public Query(SqlConnectionStringBuilder QArgs)
         {
-            this.mArgs = QArgs as QueryArgs;
+            this.mArgs = QArgs;
         }
-
-        public Query(SqlConnection Con) : this(Con.ConnectionString) { }
-
-        public Query(string ConnectionString) : this(new QueryArgs(ConnectionString)) { }
+         
+        public Query(string ConnectionString) : this(new SqlConnectionStringBuilder(ConnectionString)) { }
 
         [MTAThread]
         public SqlConnection OpenConnection()
         {
             try
             {
-                using (var mConn = new SqlConnection(this.mArgs.GetConnectionString()))
+                using (var mConn = new SqlConnection(this.mArgs.ConnectionString))
                 {
                     while (mConn.State != ConnectionState.Open)
                         mConn.Open();
@@ -207,7 +205,7 @@ namespace z.SQL
             ExecNonQuery(Script);
         }
 
-        public IQueryArgs ConnectionParameter
+        public SqlConnectionStringBuilder ConnectionParameter
         {
             get { return this.mArgs; }
         }
@@ -216,7 +214,7 @@ namespace z.SQL
         {
             try
             {
-                using (var mConn = new SqlConnection(this.mArgs.GetConnectionString()))
+                using (var mConn = new SqlConnection(this.mArgs.ConnectionString))
                 {
                     while (mConn.State != ConnectionState.Open)
                         mConn.Open();
@@ -249,7 +247,7 @@ namespace z.SQL
         {
             try
             {
-                using (var mConn = new SqlConnection(this.mArgs.GetConnectionString()))
+                using (var mConn = new SqlConnection(this.mArgs.ConnectionString))
                 {
                     while (mConn.State != ConnectionState.Open)
                         mConn.Open();
@@ -292,159 +290,6 @@ namespace z.SQL
         ~Query()
         {
             Dispose(true);
-        }
-
-        public class QueryArgs : IDisposable, IQueryArgs
-        {
-            public String Server { get; set; }
-            public String UserName { get; set; }
-            public String Password { get; set; }
-            public String Database { get; set; }
-            public int Port { get; set; }
-            public string AttachDBFileName { get; set; }
-            public bool IntegratedSecurity { get; set; } = false;
-
-            public QueryArgs()
-            {
-                this.Port = 1433;
-            }
-
-            public QueryArgs(string ConnectionString)
-            {
-                this.Port = 1433;
-                this.GetConnection(ConnectionString);
-            }
-
-            public QueryArgs(string Server, string User, string pass, string Dbase, int Port = 1433)
-            {
-                this.Server = Server;
-                this.UserName = User;
-                this.Password = pass;
-                this.Database = Dbase;
-                this.Port = Port;
-            }
-
-            public QueryArgs(string Server, string User, string pass, int Port = 1433)
-            {
-                this.Server = Server;
-                this.UserName = User;
-                this.Password = pass;
-                this.Port = Port;
-            }
-
-            public string GetConnectionString()
-            {
-                StringBuilder sb;
-
-                try
-                {
-                    sb = new StringBuilder();
-                    if (!IntegratedSecurity)
-                    {
-                        sb.AppendFormat("Password={0};", this.Password);
-                        sb.AppendFormat("Persist Security Info=True;");
-                        sb.AppendFormat("User ID={0};", this.UserName);
-                    }
-                    else
-                        sb.AppendFormat("Integrated Security=True;");
-
-                    if (this.Database != null)
-                        sb.AppendFormat("Initial Catalog={0};", this.Database);
-
-                    if (this.Port == 1433)
-                    {
-                        sb.AppendFormat("Server={0}", this.Server);
-                    }
-                    else
-                    {
-                        sb.AppendFormat("Server={0},{1}", this.Server, this.Port);
-                    }
-
-                    if (AttachDBFileName != null)
-                        sb.AppendFormat("AttachDbFilename={0};", this.AttachDBFileName);
-
-                    return sb.ToString();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-                finally
-                {
-                    sb = null;
-                }
-            }
-
-            public string GetConnectionStringWOCatalog()
-            {
-                StringBuilder sb;
-
-                try
-                {
-                    sb = new StringBuilder();
-                    sb.AppendFormat("Password={0};", this.Password);
-                    sb.AppendFormat("Persist Security Info=True;");
-                    sb.AppendFormat("User ID={0};", this.UserName);
-
-                    if (this.Port == 1433)
-                    {
-                        sb.AppendFormat("Server={0}", this.Server);
-                    }
-                    else
-                    {
-                        sb.AppendFormat("Server={0},{1}", this.Server, this.Port);
-                    }
-                    return sb.ToString();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-                finally
-                {
-                    sb = null;
-                }
-            }
-
-            void GetConnection(string strConnection)
-            {
-                string[] s = strConnection.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string ss in s)
-                {
-                    string[] h = ss.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
-                    switch (h[0].Trim())
-                    {
-                        case "Password": this.Password = h[1].Trim(); break;
-                        case "User ID": this.UserName = h[1].Trim(); break;
-                        case "Initial Catalog": this.Database = h[1].Trim(); break;
-                        case "Data Source":
-                        case "Server":
-                            string[] sf = h[1].Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                            this.Server = sf[0].Trim();
-                            if (sf.Length == 2)
-                            {
-                                this.Port = Convert.ToInt32(sf[1].Trim());
-                            }
-                            else
-                            {
-                                this.Port = 1433;
-                            }
-
-                            break;
-                        case "AttachDbFilename": this.AttachDBFileName = h[1].Trim(); break;
-                        case "Integrated Security": this.IntegratedSecurity = true; break;
-                    }
-                }
-            }
-
-            void IDisposable.Dispose()
-            {
-                //this.Server = null;
-                //this.Password = null;
-                //this.UserName = null;
-                //this.Database = null;
-                GC.SuppressFinalize(this);
-            }
-        }
+        } 
     }
 }

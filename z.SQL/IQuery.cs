@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using z.Data;
 
 namespace z.SQL
@@ -37,6 +38,6 @@ namespace z.SQL
         [MTAThread]
         object ExecScalar(string Command, params object[] Value);
         
-        IQueryArgs ConnectionParameter { get; }
+        SqlConnectionStringBuilder ConnectionParameter { get; }
     }
 }
