@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-//using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -66,7 +64,7 @@ namespace z.SQL
         /// <param name="row"></param>
         /// <param name="PassKey"></param>
         /// <returns></returns>
-        public static string PassParameter(this string CommandText, Pair row, char PassKey = '@')
+        public static string PassParameter(this string CommandText, IPair row, char PassKey = '@')
         {
             try
             {
@@ -103,7 +101,7 @@ namespace z.SQL
             using (var g = new QueryMerge(sql as Query)) g.Save(TableName, ViewName, dr, RebuildTable);
         }
 
-        public static DataRow Save(this IQuery sql, string TableName, string ViewName, Pair values)
+        public static DataRow Save(this IQuery sql, string TableName, string ViewName, IPair values)
         {
             using (DataTable dt = new DataTable())
             {
@@ -132,7 +130,7 @@ namespace z.SQL
                 throw new Exception("This Method is not yet Implemented for this Object");
         }
 
-        public static void Save(this IQuery query, string TableName, Pair values) => query.Save(TableName, "", values);
+        public static void Save(this IQuery query, string TableName, IPair values) => query.Save(TableName, "", values);
 
         public static void Save(this IQuery query, string TableName, PairCollection values) => values.Each(x => query.Save(TableName, x));
 
